@@ -175,7 +175,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-    - image: python:3.7-alpine3.11
+    - image: circleci/python:3.6.2
     steps:
       - checkout
       - add_ssh_keys:
@@ -186,11 +186,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk update
-            apk add openssh-client
-            apk add --update ansible
-            apk add tar
-            apk add --no-cache aws-cli
+            python -m pip install ansible
+            python -m pip install awscli ansible
+            sudo apt update
+            sudo apt install tar gzip
       - run:
           name: Configure server
           command: |
