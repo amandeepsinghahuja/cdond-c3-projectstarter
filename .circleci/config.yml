@@ -189,7 +189,8 @@ jobs:
             apk update
             apk add openssh-client
             apk add --update ansible
-            apk add --update tar awscli
+            apk add tar
+            apk add --no-cache aws-cli
       - run:
           name: Configure server
           command: |
