@@ -188,7 +188,7 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y ansible
-            sudo pip3 -m install awscliv2
+            pip3 -m install awscliv2
       - run:
           name: Configure server
           command: |
