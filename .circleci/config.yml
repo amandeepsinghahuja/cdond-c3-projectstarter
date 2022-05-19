@@ -173,6 +173,30 @@ jobs:
       - destroy-environment:
           workFlowId: ${CIRCLE_WORKFLOW_ID:0:7}
 
+  configure-infrastructure:
+    docker:
+    - image: ansible/ansible
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "1d:ad:a7:8a:50:35:c2:55:38:a2:52:7e:22:68:df:b7"
+      - attach_workspace:
+          at: . 
+      - run:
+          name: Install dependencies
+          command: |
+            yum -y update
+            yum -y install tar awscli
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment:
+          workFlowId: ${CIRCLE_WORKFLOW_ID:0:7}
+      # Here's where you will add some code to rollback on failure    
+
 workflows:
   default:
     jobs:
@@ -192,8 +216,8 @@ workflows:
           filters:
             branches:
               only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
