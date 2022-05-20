@@ -182,7 +182,7 @@ jobs:
           fingerprints:
             - "1d:ad:a7:8a:50:35:c2:55:38:a2:52:7e:22:68:df:b7"
       - attach_workspace:
-          at: . 
+          at: ~/
       - run:
           name: Install dependencies
           command: |
