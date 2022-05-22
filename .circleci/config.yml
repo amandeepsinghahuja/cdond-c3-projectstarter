@@ -209,7 +209,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]      
+          keys: [backend-build]
+      - run:
+          name: Install dependencies
+          command: |
+            apt-get update              
+            apt-get install awscli
       - run:
           name: Run migrations
           command: |
