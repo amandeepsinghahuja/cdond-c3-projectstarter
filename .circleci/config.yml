@@ -256,6 +256,11 @@ jobs:
           name: Install dependency awscli
           command: |        
             pip install awscli --upgrade
+      - run:
+          name: Install dependency nodejs
+          command: |        
+            apk add nodejs npm
+            npm install pm2 -g            
       - attach_workspace:
           at: ~/             
       - run:
