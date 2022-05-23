@@ -236,7 +236,7 @@ jobs:
 
   deploy-frontend:
     docker:
-    - image: amazon/aws-cli
+    - image: python:3.7-alpine3.11
     steps:
       - checkout
       - restore_cache:
@@ -244,16 +244,18 @@ jobs:
       - run:
           name: Install dependency tar gzip
           command: |
-            yum -y install tar gzip
-      - run:
-          name: Install dependency python
-          command: |
-            sudo apt install python3.7
-            python -m pip install --upgrade pip
+            apk update
+            apk upgrade
+            apk add tar gzip
       - run:
           name: Install dependency ansible
-          command: |            
-            sudo apt install ansible
+          command: |
+            python -m pip install --upgrade pip
+            apk add --update ansible
+      - run:
+          name: Install dependency awscli
+          command: |        
+            pip install awscli --upgrade
       - attach_workspace:
           at: ~/             
       - run:
@@ -312,6 +314,44 @@ jobs:
       - destroy-environment:
           workFlowId: ${CIRCLE_WORKFLOW_ID:0:7}
 
+  smoke-test:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+      - run:
+          name: Get backend url
+          command: |
+            BACKEND_IP=`aws --region us-east-1 ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].[PublicIpAddress]' --output text`
+            echo $BACKEND_IP
+      - run:
+          name: Backend smoke test.
+          command: |
+            BACKEND_IP=`aws --region us-east-1 ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].[PublicIpAddress]' --output text`
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
+            then
+                return 0
+            else
+                return 1
+            fi
+      - run:
+          name: Frontend smoke test.
+          command: |
+            URL="http://udapeople-998156532315-1.s3-website-us-east-1.amazonaws.com/#/employees" 
+            echo ${URL} 
+            if curl -s ${URL} | grep "Welcome"
+            then
+                # Change this to 0 after the job fails
+              return 1
+            else
+              return 1
+            fi
 workflows:
   default:
     jobs:
