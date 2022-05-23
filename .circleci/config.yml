@@ -239,10 +239,14 @@ jobs:
     - image: amazon/aws-cli
     steps:
       - checkout
+      - restore_cache:
+          keys: [frontend-build]
+      - attach_workspace:
+          at: ~/           
       - run:
           name: Install dependency python
           command: |
-            apt-get install python3.7
+            sudo apt install python3.7
             python -m pip install --upgrade pip
       - run:
           name: Install dependency ansible
