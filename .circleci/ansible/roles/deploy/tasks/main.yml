@@ -5,9 +5,9 @@
     upgrade: "yes"
     
 - name: Unarchive a file that is already on the remote machine
-  ansible.builtin.unarchive:
+  unarchive:
     src: ~/project/artifact.tar.gz
-    dest: /home/ubuntu/
+    dest: /home/ubuntu
     remote_src: yes
     
 - name: "Install nodejs and npm."
@@ -37,4 +37,4 @@
     pm2 stop default
     pm2 start npm -- run start
   args:
-    chdir: /home/ubuntu/
+    chdir: /home/ubuntu

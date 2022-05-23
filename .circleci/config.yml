@@ -307,11 +307,13 @@ jobs:
           name: Deploy backend
           command: |
             cd backend
+            pwd
             npm i
             npm run build
             cd ..
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
+            ls
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
@@ -331,7 +333,7 @@ jobs:
             apk upgrade
             apk add tar gzip
             python -m pip install --upgrade pip 
-            pip install awscli --upgrade
+            pip install awscli --upgrade            
       - run:
           name: Get backend url
           command: |
