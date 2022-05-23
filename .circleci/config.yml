@@ -241,8 +241,10 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-build]
-      - attach_workspace:
-          at: ~/           
+      - run:
+          name: Install dependency tar gzip
+          command: |
+            yum -y install tar gzip
       - run:
           name: Install dependency python
           command: |
@@ -252,6 +254,8 @@ jobs:
           name: Install dependency ansible
           command: |            
             sudo apt install ansible
+      - attach_workspace:
+          at: ~/             
       - run:
           name: Get backend url
           command: |
