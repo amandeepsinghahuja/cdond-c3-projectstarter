@@ -1,0 +1,40 @@
+---
+- name: "Update/upgrade packages."
+  become: true
+  apt:
+    upgrade: "yes"
+    
+- name: Unarchive a file that is already on the remote machine
+  ansible.builtin.unarchive:
+    src: ~/project/artifact.tar.gz
+    dest: /home/ubuntu/
+    remote_src: yes
+    
+- name: "Install nodejs and npm."
+  become: true
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+    update_cache: yes
+
+- name: "Install pm2."
+  become: true
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
+
+- name: "Build package"
+  become: true
+  command: npm run build
+  args:
+    chdir: /home/ubuntu
+    
+- name: "Start server"
+  become: true
+  command: |
+    pm2 stop default
+    pm2 start npm -- run start
+  args:
+    chdir: /home/ubuntu/
