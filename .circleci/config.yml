@@ -327,7 +327,11 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            # your code here
+            apk update
+            apk upgrade
+            apk add tar gzip
+            python -m pip install --upgrade pip 
+            pip install awscli --upgrade
       - run:
           name: Get backend url
           command: |
@@ -382,10 +386,10 @@ workflows:
           requires: [configure-infrastructure]
       - deploy-frontend:
           requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
       # - cleanup:
