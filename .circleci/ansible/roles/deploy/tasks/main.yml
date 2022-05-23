@@ -9,12 +9,20 @@
   file:
     path: /home/ubuntu/backend/
     state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: 0755
+
 
 - name: Copy files
   become: true
   copy:
     src: /root/project/artifact.tar.gz
     dest: /home/ubuntu/backend/
+    owner: ubuntu
+    group: ubuntu
+    mode: 0755
+
 
 - name: Unarchive a file that is already on the remote machine
   ansible.builtin.unarchive:
