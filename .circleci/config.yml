@@ -230,7 +230,7 @@ jobs:
       - run:
           command: | 
             cat backend/migrations_dump.txt
-            if grep -q "No migrations are pending" migrations_dump.txt
+            if grep -q "No migrations are pending" backend/migrations_dump.txt
             then
               npm run migration:revert
               npm run migrations > migrations_dump.txt
