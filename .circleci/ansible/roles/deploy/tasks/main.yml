@@ -57,7 +57,7 @@
     pwd
     ls
     pm2 start npm -- run start
-    cd dist
-    pm2 start main.js --update-env
+    #cd dist
+    #pm2 start main.js --update-env
   args:
     chdir: /home/ubuntu/backend
