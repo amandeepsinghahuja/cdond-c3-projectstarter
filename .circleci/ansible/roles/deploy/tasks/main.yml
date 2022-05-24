@@ -7,7 +7,7 @@
 - name: "Create directory"
   become: true
   file:
-    path: /home/ubuntu/backend/
+    path: ~/backend/
     state: directory
     owner: ubuntu
     group: ubuntu
@@ -18,18 +18,24 @@
   become: true
   copy:
     src: /root/project/artifact.tar.gz
-    dest: /home/ubuntu/backend/
+    dest: ~/backend/
     owner: ubuntu
     group: ubuntu
     mode: 0755
 
 
-- name: Unarchive a file that is already on the remote machine
-  ansible.builtin.unarchive:
-    src: /home/ubuntu/backend/artifact.tar.gz
-    dest: /home/ubuntu/backend
-    remote_src: yes
-    
+# - name: Unarchive a file that is already on the remote machine
+#   ansible.builtin.unarchive:
+#     src: ~/backend/artifact.tar.gz
+#     dest: ~/backend
+#     remote_src: yes
+- name: unarchive backend files
+  become: yes
+  shell: |
+    cd ~/backend
+    tar -vxf artifact.tar.gz
+    rm -f artifact.tar.gz
+
 - name: "Install nodejs and npm."
   become: true
   apt:
