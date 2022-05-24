@@ -17,26 +17,30 @@ commands:
           name: Destroy frontend environment
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name "udapeople-frontend-<< parameters.workFlowId >>"           
+            aws cloudformation delete-stack --stack-name "udapeople-frontend-<< parameters.workFlowId >>"
+      - run:
+          name: Remove S3 Bucket
+          when: on_fail
+          command: |
+            aws s3 rb s3://udapeople-<< parameters.workFlowId >> --force                      
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
-      # Add parameter here     
+      workFlowId:
+        type: string    
     steps:
       - run:
           name: Revert migrations
-          # Add when this will run
           command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
-            if(( $SUCCESS==1 )); 
+            SUCCESS=$(curl --insecure  https://kvdb.io/KdsQckMYAVFCsAifk4E1xD/migration_<< parameters.workflow_id >>)
+            # Logic for reverting the database state
+            if (( $SUCCESS == 1 ));
             then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
-            fi
+                cd ~/project/backend
+                npm install
+                npm run migration:revert
+            fi  
             
 jobs:
   build-frontend:
@@ -358,12 +362,13 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-                # Change this to 0 after the job fails
               return 1
             else
               return 1
             fi
       - destroy-environment:
+          workFlowId: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
           workFlowId: ${CIRCLE_WORKFLOW_ID:0:7}            
 workflows:
   default:
