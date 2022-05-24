@@ -7,7 +7,7 @@
 - name: "Create directory"
   become: true
   file:
-    path: ~/backend/
+    path: /home/ubuntu/backend/
     state: directory
     owner: ubuntu
     group: ubuntu
@@ -18,7 +18,7 @@
   become: true
   copy:
     src: /root/project/artifact.tar.gz
-    dest: ~/backend/
+    dest: /home/ubuntu/backend/
     owner: ubuntu
     group: ubuntu
     mode: 0755
@@ -32,7 +32,7 @@
 - name: unarchive backend files
   become: yes
   shell: |
-    cd ~/backend
+    cd /home/ubuntu/backend/
     tar -vxf artifact.tar.gz
     rm -f artifact.tar.gz
 
