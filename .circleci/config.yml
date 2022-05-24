@@ -40,7 +40,7 @@ commands:
             then
                 cd ~/project/backend
                 npm install
-                npm run migration:revert
+                npm run migrations:revert
             fi  
             
 jobs:
@@ -226,6 +226,7 @@ jobs:
             cd backend
             npm install
             #Run and save the migration output
+            npm run migrations:revert
             npm run migrations > migrations_dump.txt
       - run:
           command: | 
