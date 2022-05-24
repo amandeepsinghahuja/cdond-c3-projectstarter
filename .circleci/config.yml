@@ -331,7 +331,7 @@ jobs:
           command: |
             apk update
             apk upgrade
-            apk add tar gzip
+            apk add tar gzip curl
             python -m pip install --upgrade pip 
             pip install awscli --upgrade            
       - run:
@@ -363,6 +363,8 @@ jobs:
             else
               return 1
             fi
+      - destroy-environment:
+          workFlowId: ${CIRCLE_WORKFLOW_ID:0:7}            
 workflows:
   default:
     jobs:
