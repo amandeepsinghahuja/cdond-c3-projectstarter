@@ -33,7 +33,7 @@ commands:
       - run:
           name: Revert migrations
           command: |
-            SUCCESS=$(curl --insecure  https://kvdb.io/KdsQckMYAVFCsAifk4E1xD/migration_<< parameters.workflow_id >>)
+            SUCCESS=$(curl --insecure  https://kvdb.io/KdsQckMYAVFCsAifk4E1xD/migration_<< parameters.workFlowId >>)
             # Logic for reverting the database state
             if (( $SUCCESS == 1 ));
             then
