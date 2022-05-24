@@ -59,11 +59,11 @@
     
 - name: "Start server"
   become: true
-  command: |
+  shell: |
     pwd
     ls
     pm2 start npm -- run start
     cd dist
-    pm2 start main.js --update-env
+    pm2 start main.js
   args:
-    chdir: /home/ubuntu/backend
+    chdir: /home/ubuntu/backend/
