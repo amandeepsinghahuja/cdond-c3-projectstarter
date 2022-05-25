@@ -65,5 +65,6 @@
     pm2 start npm -- run start
     cd dist
     pm2 start main.js
+    pm2 logs
   args:
     chdir: /home/ubuntu/backend/
