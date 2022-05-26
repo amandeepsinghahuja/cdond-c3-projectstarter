@@ -62,8 +62,8 @@
   shell: |
     pwd
     ls
-    pm2 start npm -- run start
-    cd dist
-    pm2 start main.js
+    pm2 start udapeople -- run start
+    # cd dist
+    # pm2 start main.js
   args:
     chdir: /home/ubuntu/backend/
