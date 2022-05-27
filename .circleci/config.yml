@@ -414,10 +414,12 @@ jobs:
             aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter CREATE_COMPLETE --no-paginate --output text \
             |xargs echo -e | sed 's/\ /\n/'g | grep -v $CurrWorkflowID | cut -d '-' -f3 | sort | uniq | while read OldWorkflowID 
             do
-              aws s3 rb "s3://udapeople-${OldWorkflowID}" --force
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-            done
+              deleteS3=`aws s3 rb "s3://udapeople-${OldWorkflowID}" --force`
+              deleteBackStack=`aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"`
+              deleteFrontStack=`aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"`
+              echo -e "${OldWorkflowID} :\n ${deleteS3} \n ${deleteBackStack} \n ${deleteFrontStack} \n\n"
+            done >> cleanupStatus.txt
+            cat cleanupStatus.txt
 workflows:
   default:
     jobs:
